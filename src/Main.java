@@ -11,6 +11,7 @@ public class Main {
     private static ObjectInputStream in;
     private static final Scanner scanner = new Scanner(System.in);
     public static void main(String[] args) {
+        boolean connected = false;
         if (args.length != 2){
             System.out.println("Neispravan broj argumenata");
             System.out.println("java -jar Lab3.jar <ip> <port>");
@@ -20,20 +21,23 @@ public class Main {
         int port = Integer.parseInt(args[1]);
         try {
             connect(ip, port);
+            connected = true;
         } catch (UnknownHostException e) {
             System.out.println("Nepoznata adresa");
         } catch (IOException e) {
             System.out.println("Neuspjelo spajanje");
+
         }
-        while (true){
+        while (connected){
             try {
                 System.out.print("Unesite poruku: ");
                 String msg = scanner.nextLine();
-                if (msg.equals("exit")) break;
+                if (msg.equals("exit")) connected = false;
                 sendMessage(msg);
             } catch (Exception e) {
                 System.out.println("Neuspjelo slanje poruke");
             }
+            if (out == null || in == null) connected = false;
         }
         try {
             in.close();
